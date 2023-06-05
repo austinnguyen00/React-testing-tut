@@ -23,6 +23,7 @@ const Login = () => {
 		} catch (err) {
 			setError(true);
 		}
+		setLoading(false);
 	};
 
 	return (
