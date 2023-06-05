@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Login from "./Login";
+import React from "react";
 
 test("username input should be rendered", () => {
 	render(<Login />);
@@ -85,4 +86,29 @@ test("button should not be disabled when inputs exist", () => {
 	fireEvent.change(passwordInputEl, { target: { value: testValue } });
 
 	expect(buttonEl).not.toBeDisabled();
+});
+
+test("loading should not be rendered", () => {
+	render(<Login />);
+	const buttonEl = screen.getByRole("button");
+	expect(buttonEl).not.toHaveTextContent("Please wait...");
+});
+
+test("loading should be rendered when click", () => {
+	render(<Login />);
+	const buttonEl = screen.getByRole("button");
+	const userInputEl = screen.getByPlaceholderText(
+		/username/i,
+	) as HTMLInputElement;
+	const passwordInputEl = screen.getByPlaceholderText(
+		/password/i,
+	) as HTMLInputElement;
+
+	const testValue = "test";
+
+	fireEvent.change(userInputEl, { target: { value: testValue } });
+	fireEvent.change(passwordInputEl, { target: { value: testValue } });
+	fireEvent.click(buttonEl);
+
+	expect(buttonEl).toHaveTextContent(/Please wait.../i);
 });
